@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<!--spring 扫描 -->
+	<context:component-scan base-package="com.atguigu">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!--加载配置文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	<!--配置数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+
+	</bean>
+
+
+	<!-- 配置事务管理器 -->
+	<bean
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 开启事务驱动 @transactional -->
+	<tx:annotation-driven />
+
+	<!-- spring整合mybatis -->
+	<!-- spring整合mybatis mybatis-conf.xml====sqlSessionFactoryBuilder 读取===sqlsessionFactory=== 
+		sqlsession(connection) -->
+	<bean  class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 指定数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 调用mybatis的核心配置文件 -->
+		<property name="configLocation" value="classpath:mybatis-conf.xml"></property>
+		<!-- 调用sql映射文件 classpath:org/dppc/weixin/**/mapping/**Mapper.xml -->
+		<property name="mapperLocations" value="classpath:com/atguigu/**/dao/**Mapper.xml">
+		</property>
+		<!-- 给实体类指定包名(起别名)(不能使用通配符) -->
+		<!-- <property name="typeAliasesPackage" value="com.atguigu.sys.entity"></property> -->
+	</bean>
+	<!-- session.getMapper(**Mapper.class) 创建代理对象 默认的名字: employeeMapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.atguigu.*.dao"></property>
+	</bean>
+
+
+
+
+
+</beans>
