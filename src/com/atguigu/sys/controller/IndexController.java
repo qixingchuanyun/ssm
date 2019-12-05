@@ -34,7 +34,7 @@ public class IndexController {
 		
 		PageHelper.startPage(pageNum, 1);
 		List<Employee> employees = empService.getEmployee();
-		//5代表显示几个数字页（上一页 1 ， 2 ，3下一页）//来自线上的修改再次修改
+		//5代表显示几个数字页（上一页 1 ， 2 ，3下一页）//来自线上的修改再次修改制造冲突
 		
 		PageInfo<Employee>  pageIfo = new PageInfo<Employee>(employees, 5);
 	    String  pageStr = 	PageInfoUtil.getPageInfo(ruquest, pageIfo);
