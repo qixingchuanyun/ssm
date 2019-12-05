@@ -31,7 +31,6 @@ public class IndexController {
 	
 	@RequestMapping("/emps/{pageNum}")
 	public String getEmps(Model model,HttpServletRequest ruquest,@PathVariable("pageNum") int pageNum){
-		
 		PageHelper.startPage(pageNum, 1);
 		List<Employee> employees = empService.getEmployee();
 		//5代表显示几个数字页（上一页 1 ， 2 ，3下一页）//来自线下修改
